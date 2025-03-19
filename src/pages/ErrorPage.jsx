@@ -1,22 +1,34 @@
 // src/pages/ErrorPage.jsx
-import { useRouteError } from "react-router-dom";
-import { Button } from "@/components/ui/button"; // Assuming you have the Button component from ShadCN
+import React from "react";
+import { useNavigate, useRouteError } from "react-router-dom";
+import { AlertTriangle, Home } from "lucide-react";
 
 const ErrorPage = () => {
-  const error = useRouteError(); // Get error details
-  console.error(error); // Log the error
+  const error = useRouteError();
+  const navigate = useNavigate();
+
+  console.error(error);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground p-4">
-      <h1 className="text-3xl font-bold text-error">Oops! Something went wrong.</h1>
-      <p className="mt-2">{error.statusText || error.message}</p>
-      <Button
-        variant="outline"
-        className="mt-4 hover:bg-accent focus-visible:ring-ring"
-        onClick={() => window.location.reload()}
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-900 p-4 text-center">
+      <div className="rounded-full bg-red-900/20 p-4">
+        <AlertTriangle className="h-16 w-16 text-red-500" />
+      </div>
+      <h1 className="mt-6 text-4xl font-bold text-white">Oops!</h1>
+      <p className="mt-3 text-xl text-gray-300">
+        Sorry, an unexpected error has occurred.
+      </p>
+      <p className="mt-2 text-gray-400">
+        {error?.statusText || error?.message || "Unknown error"}
+      </p>
+
+      <button
+        onClick={() => navigate("/")}
+        className="mt-8 flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"
       >
-        Try Again
-      </Button>
+        <Home className="h-5 w-5" />
+        Back to Dashboard
+      </button>
     </div>
   );
 };
