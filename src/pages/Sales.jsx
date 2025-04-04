@@ -38,9 +38,16 @@ const Sales = () => {
         // Load customer data for each sale
         const customers = {};
         for (const sale of data) {
-          if (!customers[sale.customerId]) {
-            const customer = await getCustomerById(sale.customerId);
-            customers[sale.customerId] = customer;
+          if (sale.customerId && typeof sale.customerId === 'string' && !customers[sale.customerId]) {
+            try {
+              const customer = await getCustomerById(sale.customerId);
+              if (customer) {
+                customers[sale.customerId] = customer;
+              }
+            } catch (error) {
+              console.error(`Error loading customer ${sale.customerId}:`, error);
+              // Continue with other sales even if one fails
+            }
           }
         }
         setCustomerData(customers);

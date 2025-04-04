@@ -35,9 +35,16 @@ const Payments = () => {
         // Load customer data for each payment
         const customers = {};
         for (const payment of data) {
-          if (!customers[payment.customerId]) {
-            const customer = await getCustomerById(payment.customerId);
-            customers[payment.customerId] = customer;
+          if (payment.customerId && typeof payment.customerId === 'string' && !customers[payment.customerId]) {
+            try {
+              const customer = await getCustomerById(payment.customerId);
+              if (customer) {
+                customers[payment.customerId] = customer;
+              }
+            } catch (error) {
+              console.error(`Error loading customer ${payment.customerId}:`, error);
+              // Continue with other payments even if one fails
+            }
           }
         }
         setCustomerData(customers);
@@ -67,7 +74,7 @@ const Payments = () => {
       const customer = customerData[payment.customerId];
       
       return (
-        payment.id.toLowerCase().includes(term) ||
+        payment.id?.toLowerCase().includes(term) ||
         (customer?.name && customer.name.toLowerCase().includes(term)) ||
         (payment.notes && payment.notes.toLowerCase().includes(term))
       );
@@ -158,7 +165,7 @@ const Payments = () => {
                       {formatDate(payment.date)}
                     </td>
                     <td className="px-4 py-3 text-sm">
-                      {customerData[payment.customerId] ? (
+                      {payment.customerId && typeof payment.customerId === 'string' && customerData[payment.customerId] ? (
                         <Link
                           to={`/customers/${payment.customerId}`}
                           className="text-primary hover:underline"

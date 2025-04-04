@@ -27,8 +27,19 @@ const RecentSales = ({ sales = [] }) => {
         
         const salesData = await Promise.all(
           sales.map(async (sale) => {
-            const customer = await getCustomerById(sale.customerId);
-            return { ...sale, customer };
+            if (sale && sale.customerId && typeof sale.customerId === 'string') {
+              try {
+                const customer = await getCustomerById(sale.customerId);
+                return { ...sale, customer };
+              } catch (error) {
+                console.error(`Error loading customer ${sale.customerId}:`, error);
+                // Return sale without customer data if there's an error
+                return { ...sale, customer: null };
+              }
+            } else {
+              // Handle case where customerId is not valid
+              return { ...sale, customer: null };
+            }
           })
         );
         
