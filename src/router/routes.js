@@ -1,7 +1,4 @@
-import Layout from "@/components/layout/Layout";
-import Dashboard from "@/pages/Dashboard";
-import Customers from "@/pages/Customers";
-import Sales from "@/pages/Sales";
+
 import NotFound from "@/pages/NotFound";
 import ErrorPage from "@/pages/ErrorPage";
 // Ensure that your routes are passed to a React Router component
@@ -16,7 +13,7 @@ const routes = [
       { index: true, element: <Dashboard /> }, // Default to  Dashboard
       { path: "customers", element: <Customers /> }, // Customer list
       { path: "sales", element: <Sales /> }, // Sales list
-   
+
       { path: "dashboard", element: <Navigate to="/" replace /> }, // Redirect to default
       { path: "*", element: <NotFound /> }, // 404 Not Found
     ],
