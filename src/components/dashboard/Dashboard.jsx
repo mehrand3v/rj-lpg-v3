@@ -5,7 +5,7 @@ import { getAllCustomers } from '@/services/customerService';
 import { getAllSales } from '@/services/salesService';
 import { getAllPayments } from '@/services/paymentService';
 import { getCustomersWithOutstandingCylinders } from '@/services/cylinderService';
-import { Button } from '@/components/ui/button'; // Will be added via shadcn CLI
+import { Button } from '@/components/ui/button';
 import { 
   Card,
   CardContent,
@@ -13,7 +13,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle
-} from '@/components/ui/card'; // Will be added via shadcn CLI
+} from '@/components/ui/card';
 import {
   Users,
   ShoppingCart,
@@ -57,9 +57,9 @@ const Dashboard = () => {
           getCustomersWithOutstandingCylinders()
         ]);
         
-        // Calculate statistics
-        const totalRevenue = sales.reduce((sum, sale) => sum + sale.amount, 0);
-        const totalPayments = payments.reduce((sum, payment) => sum + payment.amount, 0);
+        // Calculate statistics with proper safety checks
+        const totalRevenue = sales.reduce((sum, sale) => sum + (Number(sale.amount) || 0), 0);
+        const totalPayments = payments.reduce((sum, payment) => sum + (Number(payment.amount) || 0), 0);
         const outstandingBalance = totalRevenue - totalPayments;
         
         // Get customers with outstanding balance
@@ -69,7 +69,7 @@ const Dashboard = () => {
         
         // Calculate total outstanding cylinders
         const outstandingCylinders = customersWithCylinders.reduce(
-          (sum, customer) => sum + customer.cylindersOutstanding, 0
+          (sum, customer) => sum + (Number(customer.cylindersOutstanding) || 0), 0
         );
         
         // Get recent sales (last 5)
@@ -97,13 +97,16 @@ const Dashboard = () => {
     loadDashboardData();
   }, []);
   
-  // Format currency
+  // Format currency with safety check
   const formatCurrency = (amount) => {
+    // Ensure amount is a valid number
+    const validAmount = typeof amount === 'number' && !isNaN(amount) ? amount : 0;
+    
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 2
-    }).format(amount);
+    }).format(validAmount);
   };
   
   if (loading) {
