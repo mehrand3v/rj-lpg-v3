@@ -16,10 +16,7 @@ const routes = [
       { index: true, element: <Dashboard /> }, // Default to  Dashboard
       { path: "customers", element: <Customers /> }, // Customer list
       { path: "sales", element: <Sales /> }, // Sales list
-      //   { path: "customers/billing", element: <MonthlyBillingStatement /> }, // Billing statement page
-      //   { path: "customers/transactions", element: <TransactionSummary /> }, // Transaction history page
-      //   { path: "customers/transactions/new", element: <TransactionForm /> }, // Add new transaction form
-      //   { path: "transactions", element: <TransactionSummary /> }, // Direct transactions page
+   
       { path: "dashboard", element: <Navigate to="/" replace /> }, // Redirect to default
       { path: "*", element: <NotFound /> }, // 404 Not Found
     ],
