@@ -1,6 +1,7 @@
 // src/components/layout/Header.jsx
 import { useAuth } from '@/context/AuthContext';
-import { Button } from '@/components/ui/button'; // Will be added via shadcn CLI
+import { Button } from '@/components/ui/button';
+import { ModeToggle } from '@/components/ModeToggle';
 import { LogOut, User } from 'lucide-react';
 
 export const Header = () => {
@@ -22,9 +23,12 @@ export const Header = () => {
       
       {currentUser && (
         <div className="flex items-center gap-4">
+          {/* Add ModeToggle here */}
+          <ModeToggle />
+          
           <div className="hidden md:flex flex-col items-end">
-            <p className="text-sm font-medium text-foreground">{userProfile?.name || currentUser.email}</p>
-            <p className="text-xs text-muted-foreground">{userProfile?.role || 'User'}</p>
+            {/* <p className="text-sm font-medium text-foreground">{userProfile?.name || currentUser.email}</p> */}
+            <p className="text-xs text-muted-foreground">{userProfile?.role || 'Rana Jehanzeb'}</p>
           </div>
           
           <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Logout">

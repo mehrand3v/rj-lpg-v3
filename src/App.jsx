@@ -1,4 +1,5 @@
 // src/App.jsx
+import { ThemeProvider } from '@/components/ThemeProvider';
 import { RouterProvider } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { NotificationProvider } from '@/components/shared/NotificationSystem';
@@ -17,6 +18,7 @@ initializeDatabase()
 
 const App = () => {
   return (
+    <ThemeProvider>
     <ErrorBoundary>
       <AuthProvider>
         <NotificationProvider>
@@ -24,6 +26,7 @@ const App = () => {
         </NotificationProvider>
       </AuthProvider>
     </ErrorBoundary>
+    </ThemeProvider>
   );
 };
 
