@@ -1,7 +1,7 @@
 // src/components/layout/DashboardActions.jsx
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button'; // Will be added via shadcn CLI
-import { Plus, Users, ShoppingCart, CreditCard, Package } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Users, ShoppingCart, CreditCard, Package } from 'lucide-react';
 
 export const DashboardActions = () => {
   const navigate = useNavigate();
@@ -25,11 +25,11 @@ export const DashboardActions = () => {
       </Button>
       
       <Button 
-        onClick={() => navigate('/payments/new')}
+        onClick={() => navigate('/payments')}
         className="flex items-center gap-2 h-16 bg-green-600 hover:bg-green-700"
       >
         <CreditCard className="h-5 w-5" />
-        <span>Record Payment</span>
+        <span>Customer Payments</span>
       </Button>
       
       <Button 

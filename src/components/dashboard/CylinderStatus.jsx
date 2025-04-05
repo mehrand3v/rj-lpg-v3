@@ -21,12 +21,12 @@ import {
 const CylinderStatus = ({ customers = [] }) => {
   const navigate = useNavigate();
   
-  // Prepare chart data
+  // Prepare chart data with rounded cylinder values
   const chartData = customers.map(customer => ({
     name: customer.name.length > 15 
       ? `${customer.name.substring(0, 15)}...` 
       : customer.name,
-    cylinders: customer.cylindersOutstanding,
+    cylinders: Math.round(customer.cylindersOutstanding), // Ensure integer values
     fullName: customer.name,
     id: customer.id
   }));
@@ -78,7 +78,11 @@ const CylinderStatus = ({ customers = [] }) => {
             layout="vertical"
           >
             <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-            <XAxis type="number" />
+            <XAxis 
+              type="number" 
+              tickFormatter={(value) => Math.round(value)} 
+              ticks={[0, 2, 4, 6, 8, 10].filter(tick => tick <= Math.max(...chartData.map(item => item.cylinders)))} 
+            />
             <YAxis 
               type="category" 
               dataKey="name" 

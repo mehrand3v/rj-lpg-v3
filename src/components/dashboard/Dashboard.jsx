@@ -1,6 +1,6 @@
 // src/components/dashboard/Dashboard.jsx
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { getAllCustomers } from '@/services/customerService';
 import { getAllSales } from '@/services/salesService';
 import { getAllPayments } from '@/services/paymentService';
@@ -21,7 +21,8 @@ import {
   CreditCard,
   TrendingUp,
   AlertTriangle,
-  RefreshCw
+  RefreshCw,
+  ArrowRight
 } from 'lucide-react';
 import { DashboardActions } from '@/components/layout/DashboardActions';
 import CustomerBalances from './CustomerBalances';
@@ -67,9 +68,9 @@ const Dashboard = () => {
           .filter(customer => customer.outstandingBalance > 0)
           .sort((a, b) => b.outstandingBalance - a.outstandingBalance);
         
-        // Calculate total outstanding cylinders
+        // Calculate total outstanding cylinders - ensure integer values
         const outstandingCylinders = customersWithCylinders.reduce(
-          (sum, customer) => sum + (Number(customer.cylindersOutstanding) || 0), 0
+          (sum, customer) => sum + (Math.round(Number(customer.cylindersOutstanding)) || 0), 0
         );
         
         // Get recent sales (last 5)
@@ -212,31 +213,42 @@ const Dashboard = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2">
-              {stats.customersWithBalance.slice(0, 3).map(customer => (
-                <li key={customer.id} className="flex justify-between">
-                  <Button
-                    variant="link"
-                    className="p-0 h-auto text-foreground"
-                    onClick={() => navigate(`/customers/${customer.id}`)}
+            <ul className="space-y-3">
+              {stats.customersWithBalance.slice(0, 5).map(customer => (
+                <li key={customer.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                  <Link 
+                    to={`/customers/${customer.id}`}
+                    className="text-primary hover:underline font-medium flex-1"
                   >
                     {customer.name}
-                  </Button>
-                  <span className="font-medium text-red-600 dark:text-red-400">
+                  </Link>
+                  <span className="font-medium text-red-600 dark:text-red-400 px-4">
                     {formatCurrency(customer.outstandingBalance)}
                   </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate(`/payments/new?customer=${customer.id}`)}
+                    className="gap-1"
+                  >
+                    <CreditCard className="h-4 w-4" />
+                    Pay
+                  </Button>
                 </li>
               ))}
             </ul>
             
-            {stats.customersWithBalance.length > 3 && (
-              <Button
-                variant="link"
-                className="mt-2 p-0 h-auto"
-                onClick={() => navigate('/reports/outstanding-balances')}
-              >
-                View all {stats.customersWithBalance.length} customers with balances
-              </Button>
+            {stats.customersWithBalance.length > 5 && (
+              <div className="flex justify-end mt-4">
+                <Button
+                  variant="ghost"
+                  className="gap-1"
+                  onClick={() => navigate('/payments')}
+                >
+                  View all customers with balances
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </div>
             )}
           </CardContent>
         </Card>
