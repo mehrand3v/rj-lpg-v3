@@ -62,12 +62,14 @@ const Cylinders = () => {
   const handleSelectCustomer = async (customerId, customerName) => {
     setSelectedCustomerId(customerId);
     setSelectedCustomerName(customerName);
-    setActiveTab('history');
     
     try {
       // Get detailed cylinder tracking for the selected customer
       const tracking = await getCylinderTracking(customerId);
       setCustomerTracking(tracking);
+      
+      // Automatically switch to the history tab
+      setActiveTab('history');
     } catch (error) {
       console.error('Error loading customer tracking:', error);
       notification.error('Failed to load detailed cylinder tracking');
@@ -124,7 +126,6 @@ const Cylinders = () => {
           <TabsTrigger 
             value="history" 
             className="flex items-center gap-2"
-            disabled={!selectedCustomerId}
           >
             <User className="h-4 w-4" />
             Return History
@@ -154,7 +155,11 @@ const Cylinders = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
               {filteredCustomers.map(customer => (
-                <Card key={customer.id} className="hover:border-primary cursor-pointer transition-colors">
+                <Card 
+                  key={customer.id} 
+                  className="hover:border-primary cursor-pointer transition-colors"
+                  onClick={() => handleSelectCustomer(customer.id, customer.name)}
+                >
                   <CardHeader className="pb-2">
                     <CardTitle className="flex justify-between items-center">
                       <Link
@@ -179,7 +184,10 @@ const Cylinders = () => {
                         variant="ghost"
                         size="sm"
                         className="gap-2"
-                        onClick={() => handleSelectCustomer(customer.id, customer.name)}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Not needed since we want the same action
+                          handleSelectCustomer(customer.id, customer.name);
+                        }}
                       >
                         <InfoIcon className="h-4 w-4" />
                         View History
