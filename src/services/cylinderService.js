@@ -87,8 +87,8 @@ export const recordCylinderReturns = async (customerId, cylindersReturned, notes
         status: 'completed'
       };
       
-      // Add to a cylinder-returns collection
-      const historyCol = collection(db, 'cylinder-returns');
+      // Add to the cylinder returns collection
+      const historyCol = collection(db, COLLECTIONS.CYLINDER_RETURNS);
       const historyRef = doc(historyCol);
       transaction.set(historyRef, {
         ...historyData,
@@ -106,9 +106,9 @@ export const recordCylinderReturns = async (customerId, cylindersReturned, notes
 // Get cylinder return history for a customer
 export const getCylinderReturnHistory = async (customerId) => {
   try {
-    // Query the cylinder-returns collection for this customer's history
+    // Query the cylinder returns collection for this customer's history
     const returnsQuery = query(
-      collection(db, 'cylinder-returns'),
+      collection(db, COLLECTIONS.CYLINDER_RETURNS),
       where('customerId', '==', customerId),
       orderBy('date', 'desc')
     );
@@ -196,7 +196,7 @@ export const resetCylinderTracking = async (customerId) => {
         status: 'reset'
       };
       
-      const historyCol = collection(db, 'cylinder-returns');
+      const historyCol = collection(db, COLLECTIONS.CYLINDER_RETURNS);
       const historyRef = doc(historyCol);
       transaction.set(historyRef, {
         ...historyData,

@@ -17,6 +17,7 @@ export const COLLECTIONS = {
   SALES: 'sales',
   PAYMENTS: 'payments',
   CYLINDERS: 'cylinders',
+  CYLINDER_RETURNS: 'cylinder-returns', // New collection for cylinder return history
   COUNTERS: 'counters',
   USERS: 'users',
 };
@@ -124,5 +125,17 @@ Cylinder Tracking:
   lastUpdate: timestamp,
   createdAt: timestamp,
   updatedAt: timestamp
+}
+
+Cylinder Return History:
+{
+  id: string,
+  customerId: string,
+  cylindersReturned: number,
+  cylindersOutstanding: number, // remaining after this return
+  date: timestamp,
+  notes: string,
+  status: 'completed' | 'reset',
+  createdAt: timestamp
 }
 */

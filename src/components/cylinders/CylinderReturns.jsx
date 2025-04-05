@@ -11,10 +11,10 @@ import {
   getCustomerById
 } from '@/services/customerService';
 import { useNotification } from '@/components/shared/NotificationSystem';
-import { Button } from '@/components/ui/button'; // Will be added via shadcn CLI
-import { Input } from '@/components/ui/input'; // Will be added via shadcn CLI
-import { Label } from '@/components/ui/label'; // Will be added via shadcn CLI
-import { Textarea } from '@/components/ui/textarea'; // Will be added via shadcn CLI
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { 
   Card,
   CardContent,
@@ -22,8 +22,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle
-} from '@/components/ui/card'; // Will be added via shadcn CLI
-import { ArrowLeft, Save, Package, RefreshCw, CheckCircle } from 'lucide-react';
+} from '@/components/ui/card';
+import { ArrowLeft, Save, Package, RefreshCw, CheckCircle, HistoryIcon } from 'lucide-react';
 
 const CylinderReturns = () => {
   const [formData, setFormData] = useState({
@@ -39,6 +39,7 @@ const CylinderReturns = () => {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
+  const [showHistoryOption, setShowHistoryOption] = useState(false);
   
   const location = useLocation();
   const navigate = useNavigate();
@@ -93,6 +94,9 @@ const CylinderReturns = () => {
       const cylinderData = await getCylinderTracking(customerId);
       setCylinderTracking(cylinderData);
       
+      // Enable history option if the customer has returned cylinders before
+      setShowHistoryOption(cylinderData && cylinderData.cylindersReturned > 0);
+      
       setLoading(false);
     } catch (error) {
       notification.error('Failed to load customer details');
@@ -111,6 +115,7 @@ const CylinderReturns = () => {
     } else {
       setSelectedCustomer(null);
       setCylinderTracking(null);
+      setShowHistoryOption(false);
     }
   };
   
@@ -190,6 +195,11 @@ const CylinderReturns = () => {
     }
   };
   
+  // Navigate to view cylinder history
+  const handleViewHistory = () => {
+    navigate(`/cylinders?customer=${formData.customerId}`);
+  };
+  
   if (initialLoading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -260,7 +270,22 @@ const CylinderReturns = () => {
             {/* Customer info if selected */}
             {selectedCustomer && cylinderTracking && (
               <div className="bg-secondary p-4 rounded-lg">
-                <h3 className="font-medium mb-2">{selectedCustomer.name}</h3>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-medium">{selectedCustomer.name}</h3>
+                  
+                  {showHistoryOption && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleViewHistory}
+                      className="flex gap-2 items-center"
+                    >
+                      <HistoryIcon className="h-4 w-4" />
+                      View Return History
+                    </Button>
+                  )}
+                </div>
+                
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <p className="text-sm text-muted-foreground">Total Delivered</p>
